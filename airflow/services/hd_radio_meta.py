@@ -7,29 +7,25 @@
 # Run-D.M.C. - It's Tricky
 # Metallica - Mama Said
 # Buckcherry - Crazy Bitch
+
+# # # # # # # # # # # # # # # # # # # #
+# THIS ONLY ACCEPTS HD RADIO CHANNELS #
+# # # # # # # # # # # # # # # # # # # # 
+
 import requests
-import clickhouse_connect
-import os
 import json
 import argparse
 from typing import List
-
-def get_client():
-    conn = json.loads(os.environ['CLICKHOUSE_CONN'])
-    client = clickhouse_connect.get_client(
-        host=conn['host'],
-        port=conn['port'],
-        username=conn['username'],
-        password=conn['password'],
-        database=conn['database'],
-    )
-    return client
+from services.common import get_client
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process source query args")
     parser.add_argument("source", help="the name of the source")
     args = parser.parse_args()
-    source = args.source
+    if args.source:
+        source = args.source
+    else:
+        raise Exception("Pass the script path as argument, you will.")
 
     client = get_client()
     client.command(
@@ -69,7 +65,6 @@ if __name__ == "__main__":
         headers = json.loads(result_set[0][2])
 
         # main meta query
-        # This needs to be a dynamic schema detection. upgrade it later.
         res = requests.get(url, headers=headers, params=params)
         data = res.json()['data'][0]
         

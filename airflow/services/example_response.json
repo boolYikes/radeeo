@@ -1,0 +1,51 @@
+{
+    "data": [
+        {
+            "autodj": "Online",
+            "bitrate": "128 Kbps",
+            "date": "Apr 12, 2025",
+            "directtuneinurl": "",
+            "listeners": 14,
+            "listenertotal": 14,
+            "maxlisteners": 200,
+            "mountpoint": "/stream",
+            "offline": "False",
+            "proxytuneinurl": "",
+            "proxytuneinurltls": "",
+            "rawmeta": "Kid Rock - Tennessee Mountain Top",
+            "reseller": 0,
+            "server": "Online",
+            "serverstate": "True",
+            "servertype": "ShoutCast2",
+            "song": "Kid Rock - Tennessee Mountain Top",
+            "source": "Yes",
+            "sourceconn": 1,
+            "sourcestate": "True",
+            "summary": "<a href='https://rosetta.shoutca.st/tunein/-stream/hdradiorock.pls'>HD Radio - Rock - Kid Rock - Tennessee Mountain Top</a>",
+            "time": "04:43 PM",
+            "title": "HD Radio - Rock",
+            "track": {
+                "album": "GREATEST HITS: You Never Saw Coming",
+                "artist": "Kid Rock",
+                "buyurl": "",
+                "id": 490871,
+                "imageurl": "https://rosetta.shoutca.st/static/hdradiorock/covers/rsz_emb_kid_rock_american_rock_n_roll_36a83d9f.jpg",
+                "length": 0,
+                "playlist": {
+                    "id": 13270,
+                    "title": "2) Hot Hits"
+                },
+                "royaltytrackid": 0,
+                "started": 1744494159,
+                "title": "Tennessee Mountain Top"
+            },
+            "tuneinformat": "mp3",
+            "tuneinurl": "http://148.251.92.113:8364/stream",
+            "tuneinurltls": "",
+            "url": "https://rosetta.shoutca.st/",
+            "webplayer": "muses"
+        }
+    ],
+    "rid": "hdradiorock",
+    "type": "result"
+}

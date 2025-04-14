@@ -6,7 +6,7 @@
 # The first one is the source category, and the second one--the sub channel
 
 import json
-from services.common import get_client
+from common import get_client
 
 if __name__ == '__main__':
     try:
@@ -20,23 +20,26 @@ if __name__ == '__main__':
             FROM source_meta
             """
         )
+
+        if result.row_count > 0:
+            payload = []
+            result_set = result.result_set
+            
+            for row in result_set:
+                payload.append({"category": row[0], "source": row[1], "sname": row[2]})
+
+            # is this inside the service worker?? i'm confused
+            with open('/workspace/sources.json', 'w') as f:
+                json.dump(payload, f, indent=4)
+
+            result.close()
+            client.close()
+        else:
+            result.close()
+            client.close()
+            raise Exception("Zero row returned. Something wrong with the source name?")
+        
     except Exception as e:
         print(f"SERVICE WORKER ERROR: {e}")
 
-
-    if result.row_count > 0:
-        payload = []
-        result_set = result.result_set
         
-        for row in result_set:
-            payload.append({"category": row[0], "source": row[1], "sname": row[2]})
-
-        with open('./sources.json', 'w') as f:
-            json.dump(payload, f, indent=4)
-
-        result.close()
-        client.close()
-    else:
-        result.close()
-        client.close()
-        raise Exception("Zero row returned. Something wrong with the source name?")

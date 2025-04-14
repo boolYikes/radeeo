@@ -2,3 +2,4 @@ requests
 python-dotenv
 clickhouse-connect
 pendulum
+protobuf==3.20.*

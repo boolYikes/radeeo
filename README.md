@@ -22,11 +22,13 @@
         ```
 
 - [x] Airflow: [LINK](https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html)
-- [ ] Service worker
+- [x] Service worker
     - To be used with DockerOperator
-    - NOT working due to socket permissions. -> K8S would've handled it more gently
-    - Had to chmod the socket to 666 temporarily. -> must find better solution
-    - *Will switch to PythonOperator for local dev*
-    - `docker build -t <image> -f <service.Dockerfile> --add-host host.docker.internal:host-gateway .`
+    - [x] NOT working due to socket permissions. -> K8S would've handled it more gently -> Fixed
+    - [x] Had to chmod the socket to 666 temporarily. -> must find better solution -> Nope just toggle chmod.
 - [x] Sources sorter(for dynamic tasks) DAG
 - [ ] 1st ingestiong DAG MVP
+
+### NOTES
+- DockerOperator is a pain...
+- [DockerOperator](https://airflow.apache.org/docs/apache-airflow-providers-docker/stable/_api/airflow/providers/docker/operators/docker/index.html)

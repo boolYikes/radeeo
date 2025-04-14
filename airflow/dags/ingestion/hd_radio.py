@@ -31,10 +31,10 @@ with DAG(
                     ingest_radio_info = DockerOperator(
                         task_id=f"ingest_{source['sname']}",
                         image='python3.12_service:latest',
-                        command=f'python hd_raio_meta.py {source['sname']}',
-                        network_mode='airflow_default',
+                        command=f'-c python hd_raio_meta.py {source['sname']}',
+                        network_mode='bridge',
                         auto_remove='force',
-                        mounts=[Mount(source='/lab/dee/repos_side/radeeo/airflow/services', target='/workspace', type="bind")]
+                        mounts=[Mount('/workspace', 'service')]
                     )
 
                     ingest_radio_info

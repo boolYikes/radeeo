@@ -295,3 +295,11 @@ services:
 
 volumes:
   postgres-db-volume:
+  service:
+    name: "service"
+    driver: "local"
+    driver_opts:
+      type: "none"
+      device: "/lab/dee/repose_side/radeeo/airflow/services"
+
+

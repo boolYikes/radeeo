@@ -1,4 +1,7 @@
 .env
 *.ipynb
+*.json
 */logs
 *.cpython-312.pyc
+*.log
+*.pid

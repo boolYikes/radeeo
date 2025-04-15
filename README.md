@@ -27,8 +27,9 @@
     - [x] NOT working due to socket permissions. -> K8S would've handled it more gently -> Fixed
     - [x] Had to chmod the socket to 666 temporarily. -> must find better solution -> Nope just toggle chmod.
 - [x] Sources sorter(for dynamic tasks) DAG
-- [ ] 1st ingestiong DAG MVP
+- [x] 1st ingestiong DAG MVP
 
 ### NOTES
 - DockerOperator is a pain...
 - [DockerOperator](https://airflow.apache.org/docs/apache-airflow-providers-docker/stable/_api/airflow/providers/docker/operators/docker/index.html)
+- [DAG](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/dag/index.html#airflow.models.dag.DAG)

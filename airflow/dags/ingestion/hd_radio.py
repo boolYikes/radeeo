@@ -2,7 +2,7 @@ from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
 from airflow.utils.task_group import TaskGroup
 from services.operators.local_sensor import LocalFileSensor
-from services.common import json_load_wrapper
+from services.common import json_load_wrapper, key_sanitizer
 from docker.types import Mount
 import pendulum
 import os
@@ -13,12 +13,12 @@ DAG_NAME = 'hd_radio_ingestion'
 with DAG(
     dag_id=DAG_NAME,
     start_date=pendulum.datetime(2025, 4, 14, tz="UTC"),
-    schedule="* * * * *",
+    schedule="*/2 * * * *",
     catchup=False,
     tags=["radio", "hd_radio"],
     description="Stream metadata ingestion layer for the radio station 'HD Radio'",
     max_active_runs=1,
-    max_active_tasks=1
+    max_active_tasks=8
 ) as dag: 
     
     wait_for_sorting = LocalFileSensor(
@@ -34,7 +34,7 @@ with DAG(
             if source['source'] == 'HD Radio':
 
                 ingest_radio_info = DockerOperator(
-                    task_id=f"ingest_{source['sname'].replace(" ", "_")}",
+                    task_id=key_sanitizer(f"ingest_{source['sname']}"),
                     image='python3.12_service:latest',
                     command=["-c", f"""python hd_radio_meta.py '{source["sname"]}' || exit 1"""], # -u makes stdout unbuffered
                     docker_url='unix://var/run/docker.sock',

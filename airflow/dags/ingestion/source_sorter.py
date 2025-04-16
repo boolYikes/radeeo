@@ -1,12 +1,13 @@
 from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
 import pendulum
+from datetime import timedelta
 from docker.types import Mount
 
 with DAG(
     dag_id="source_extractor",
     start_date=pendulum.datetime(2025, 4, 14, tz="UTC"),
-    schedule="0 0 * * *",
+    schedule=timedelta(days=2),
     catchup=False,
     tags=["source_sorter"],
     description="It periodically checks new sources and outputs to a json.",

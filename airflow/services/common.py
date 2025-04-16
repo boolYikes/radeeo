@@ -3,6 +3,7 @@ import clickhouse_connect
 import os
 import json
 from typing import List
+import re
 
 def get_client():
     """
@@ -27,3 +28,8 @@ def json_load_wrapper(path: str) -> List:
         return []
     with open(path, 'r') as f:
         return json.load(f)
+
+def key_sanitizer(task_id: str) -> str:
+    task_id = re.sub(r'[^a-zA-Z0-9_\-\.]', '_', task_id)
+    task_id = task_id.strip('.')
+    return task_id

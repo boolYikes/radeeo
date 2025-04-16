@@ -18,14 +18,16 @@ import argparse
 from common import get_client
 import logging
 
+DEBUG = False
+
 # For debugging
-logging.basicConfig(
-    filename='/workspace/servicelogs/run_log.log',
-    filemode='a',
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-logging.info("TESTING logging!")
+if DEBUG:
+    logging.basicConfig(
+        filename='/workspace/servicelogs/run_log.log',
+        filemode='a',
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s'
+    )
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process source query args")

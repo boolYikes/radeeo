@@ -18,14 +18,14 @@ import argparse
 from common import get_client
 import logging
 
-DEBUG = False
+DEBUG = True
 
 # For debugging
 if DEBUG:
     logging.basicConfig(
         filename='/workspace/servicelogs/run_log.log',
         filemode='a',
-        level=logging.INFO,
+        level=logging.ERROR,
         format='%(asctime)s - %(levelname)s - %(message)s'
     )
 

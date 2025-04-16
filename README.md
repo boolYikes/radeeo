@@ -46,10 +46,12 @@
     - [x] Had to chmod the socket to 666 temporarily. -> must find better solution -> Nope just toggle chmod.
 - [x] Sources sorter(for dynamic tasks) DAG
 - [x] 1st ingestiong DAG MVP
+- [x] Flower setup for worker monitoring
 
 ### ☠️ Cap’n’s Orders
 - [ ] K8S Migration
 - [ ] CI/CD
+- [ ] Spark wave analysis, normalization, equilization, and so on
 
 ### 💀 From the Crow's Nest to the Cabin
 - DockerOperator is a pain...

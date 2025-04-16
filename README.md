@@ -1,8 +1,26 @@
-### TODOs
-- K8S Migration
-- CI/CD
+## ☠️ The Jolly Code — A Booty Huntin' Repo
 
-### Setup
+![Pirate Approved](https://img.shields.io/badge/status-seaworthy-brightgreen?style=for-the-bilge&logo=skull)
+
+![Arrrrrgh](hesapirate.png)
+
+> 🏴‍☠️This here pipeline plunders metadata 'bout media from far 'n wide, then hauls it to me ship, swabs it clean, gives it a fine polish, and stows it in the hold—ready to please the cap’n’s every whim.🦜
+
+---
+
+### 🗺️ Map o' the Treasure
+[Architecture]
+
+### 🏴‍☠️ Ye Can See It Yonder
+⚓ A demo be brewin’ in the depths. Come back when the tides be right!
+
+### ⚓ What Be Afloat?
+- ⚔️ Snappy to hoist 'n launch
+- 💨 Fast as a cutlass in the moonlight
+- 📜 Code so clean, even the Kraken can read it
+- 🔐 Locked tighter than Davy Jones’ locker
+
+### 🏗️ Settin’ Sail
 - [x] Clickhouse: [LINK](https://hub.docker.com/_/clickhouse)
     - Create volumes
     - Run:
@@ -29,7 +47,16 @@
 - [x] Sources sorter(for dynamic tasks) DAG
 - [x] 1st ingestiong DAG MVP
 
-### NOTES
+### ☠️ Cap’n’s Orders
+- [ ] K8S Migration
+- [ ] CI/CD
+
+### 💀 From the Crow's Nest to the Cabin
 - DockerOperator is a pain...
 - [DockerOperator](https://airflow.apache.org/docs/apache-airflow-providers-docker/stable/_api/airflow/providers/docker/operators/docker/index.html)
 - [DAG](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/dag/index.html#airflow.models.dag.DAG)
+
+### 📜 Code o' the Ship
+This treasure be under the MIT License — share it, fork it, do what ye will... but give a nod to the cap’n.
+
+> 🏴 Avast! May yer bugs be few and yer deploys be swift!

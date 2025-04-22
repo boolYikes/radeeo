@@ -6,3 +6,4 @@
 *.log
 *.pid
 .vscode/
+original_ref.yaml

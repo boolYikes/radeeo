@@ -37,7 +37,7 @@ def key_sanitizer(task_id: str) -> str:
 
 def get_logger(logging_entity_name: str) -> logging.Logger:
     logging.basicConfig(
-        filename=f'/workspace/servicelogs/run_log_{logging_entity_name}.log',
+        filename=f'/workspace/servicelogs/{logging_entity_name}.log',
         filemode='a',
         level=logging.ERROR,
         format='%(asctime)s - %(levelname)s - %(name)s - %(message)s'

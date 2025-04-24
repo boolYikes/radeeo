@@ -15,19 +15,10 @@
 import requests
 import json
 import argparse
-from common import get_client
-import logging
+from common import get_client, get_logger
+from deenum import IngestQueries
 
-DEBUG = True
-
-# For debugging
-if DEBUG:
-    logging.basicConfig(
-        filename='/workspace/servicelogs/run_log.log',
-        filemode='a',
-        level=logging.ERROR,
-        format='%(asctime)s - %(levelname)s - %(message)s'
-    )
+logger = get_logger("INGESTION-01")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process source query args")
@@ -39,35 +30,9 @@ if __name__ == "__main__":
         source = args.source
         try:
             client = get_client()
-            client.command(
-                """
-                CREATE TABLE IF NOT EXISTS music_raw
-                (
-                    title   String,
-                    pdate   Datetime default now(),
-                    aud     Int32,
-                    source  String,
-                    album   String,
-                    artist  String,
-                    cover   String,
-                    tag     String,
-                    stream  String,
-                    genre   String
-                )
-                ENGINE = MergeTree
-                ORDER BY (pdate)
-                """
-            )
+            client.command(IngestQueries.CREAT_MUSICRAW.value)
 
-            result = client.query(
-                f"""
-                SELECT url, params, headers
-                FROM source_meta
-                WHERE sname = '{source}'
-                ORDER BY added_on desc
-                LIMIT 1
-                """
-            )
+            result = client.query(IngestQueries.get_source(source))
 
             if result.row_count > 0:
                 # this always returns as a list even when you use limit 1
@@ -86,15 +51,7 @@ if __name__ == "__main__":
                     # Check if the song hasn't ended: no dupe .
                     # -> under the assumption that no same song will be replayed within short period of time.
                     # -> AND the assumption that songs are normally under 10 min-long.
-                    res = client.query(
-                        f"""
-                        SELECT
-                        title
-                        FROM music_raw
-                        WHERE title = '{data['track']['title']}'
-                        AND pdate >= now() - INTERVAL 10 MINUTE
-                        """
-                    )
+                    res = client.query(IngestQueries.play_status(data['track']['title'].replace("'", "\\'")))
                     if not res.result_rows:
                         title = data['track']['title']
                         aud = data['listeners']
@@ -108,25 +65,27 @@ if __name__ == "__main__":
                         
                         row = [[title, aud, source, album, artist, cover, tag, stream, genre]]
                         col = ['title', 'aud', 'source', 'album', 'artist', 'cover', 'tag', 'stream', 'genre']
-
+                        
+                        # Let's assume CH insert method implements escaping single quotes...
                         client.insert('music_raw', row, column_names=col)
 
                     else:
-                        logging.warning(f"{res.result_rows[0][0]} was already added not 10 minutes ago.")
+                        logger.warning(f"{res.result_rows[0][0]} was already added not 10 minutes ago.")
                     res.close()
                 else:
-                    logging.warning("This is a commercial segment. Passing.")
+                    logger.warning("This is a commercial segment. Passing.")
 
                 result.close()
                 client.close()
             else:
                 result.close()
                 client.close()
-                logging.error("Zero row returned. Something wrong with the source name?")
+                logger.error("Zero row returned. Something wrong with the source name?")
                 raise Exception("Zero row returned. Something wrong with the source name?")
         
         except Exception as e:
-            print(f"SERVICE WORKER ERROR: {e}")
+            logger.error(f"SERVICE WORKER ERROR: {e}")
+            raise Exception(f"SERVICE WORKER ERROR: {e}")
     else:
-        logging.error("Pass the script path as argument, you will.")
+        logger.error("Pass the script path as argument, you will.")
         raise Exception("Pass the script path as argument, you will.")

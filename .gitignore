@@ -1,9 +1,12 @@
 .env
 *.ipynb
 *.json
+*.jsonl
 */logs
 *.cpython-312.pyc
 *.log
 *.pid
+*.cfg
 .vscode/
 original_ref.yaml
+test.py

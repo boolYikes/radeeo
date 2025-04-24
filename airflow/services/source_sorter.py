@@ -6,20 +6,15 @@
 # The first one is the source category, and the second one--the sub channel
 
 import json
-from common import get_client
+from common import get_client, get_logger
+from deenum import IngestQueries
+
+logger = get_logger("SOURCE-01")
 
 if __name__ == '__main__':
     try:
         client = get_client()
-        result = client.query(
-            f"""
-            SELECT
-            category,
-            trim(splitByChar('-', sname)[1]) AS source,
-            sname
-            FROM source_meta
-            """
-        )
+        result = client.query(IngestQueries.GET_SOURCES.value)
 
         if result.row_count > 0:
             payload = []
@@ -37,9 +32,11 @@ if __name__ == '__main__':
         else:
             result.close()
             client.close()
+            logger.error("Zero row returned. Something wrong with the source name?")
             raise Exception("Zero row returned. Something wrong with the source name?")
         
     except Exception as e:
-        print(f"SERVICE WORKER ERROR: {e}")
+        logger.error(f"SERVICE WORKER ERROR: {e}")
+        raise Exception(f"SERVICE WORKER ERROR: {e}")
 
         

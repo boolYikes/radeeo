@@ -51,26 +51,31 @@ if __name__ == "__main__":
                     # Check if the song hasn't ended: no dupe .
                     # -> under the assumption that no same song will be replayed within short period of time.
                     # -> AND the assumption that songs are normally under 10 min-long.
-                    res = client.query(IngestQueries.play_status(data['track']['title'].replace("'", "\\'")))
-                    if not res.result_rows:
-                        title = data['track']['title']
-                        aud = data['listeners']
-                        source = data['title']
-                        album = data['track']['album']
-                        artist = data['track']['artist']
-                        cover = data['track']['imageurl']
-                        tag = data['track']['playlist']['title']
-                        stream = data['tuneinurl']
-                        genre = data['title'].split('-')[1].strip()
-                        
-                        row = [[title, aud, source, album, artist, cover, tag, stream, genre]]
-                        col = ['title', 'aud', 'source', 'album', 'artist', 'cover', 'tag', 'stream', 'genre']
-                        
-                        # Let's assume CH insert method implements escaping single quotes...
-                        client.insert('music_raw', row, column_names=col)
+                    try:
+                        res = client.query(IngestQueries.play_status(data['track']['title'].replace("'", "\\'")))
+                        if not res.result_rows and data['song']:
+                            title = str(data['track']['title'])
+                            aud = data['listeners']
+                            source = data['title']
+                            album = str(data['track']['album'])
+                            artist = str(data['track']['artist'])
+                            cover = data['track']['imageurl']
+                            playlist = data['track'].get('playlist')
+                            tag = playlist['title'] if playlist else None
+                            stream = data['tuneinurl']
+                            genre = data['title'].split('-')[1].strip()
+                            
+                            row = [[title, aud, source, album, artist, cover, tag, stream, genre]]
+                            col = ['title', 'aud', 'source', 'album', 'artist', 'cover', 'tag', 'stream', 'genre']
+                            
+                            # Let's assume CH insert method implements escaping single quotes...
+                            client.insert('music_raw', row, column_names=col)
 
-                    else:
-                        logger.warning(f"{res.result_rows[0][0]} was already added not 10 minutes ago.")
+                        else:
+                            logger.warning(f"{res.result_rows[0][0]} was already added not 10 minutes ago.")
+                    except Exception as e:
+                        logger.error(f"Worker logic error: {e}\n Here is the data received from request: \n{data}")
+                        raise Exception(f"Worker logic error: {e}")
                     res.close()
                 else:
                     logger.warning("This is a commercial segment. Passing.")

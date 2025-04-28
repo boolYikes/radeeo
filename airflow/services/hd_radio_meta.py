@@ -46,7 +46,8 @@ if __name__ == "__main__":
                 data = res.json()['data'][0]
 
                 # Commercial check: commercials use artist as the '<station> <channel>' format
-                if 'HD Radio' not in data['track']['artist']:
+                artist = str(data['track']['artist'])
+                if artist and 'HD Radio' not in artist:
 
                     # Check if the song hasn't ended: no dupe .
                     # -> under the assumption that no same song will be replayed within short period of time.
@@ -58,7 +59,6 @@ if __name__ == "__main__":
                             aud = data['listeners']
                             source = data['title']
                             album = str(data['track']['album'])
-                            artist = str(data['track']['artist'])
                             cover = data['track']['imageurl']
                             playlist = data['track'].get('playlist')
                             tag = playlist['title'] if playlist else ""
@@ -74,8 +74,8 @@ if __name__ == "__main__":
                         else:
                             logger.warning(f"{res.result_rows[0][0]} was already added not 10 minutes ago.")
                     except Exception as e:
-                        logger.error(f"Worker logic error: {e}\n Here is the data received from request: \n{data}")
-                        raise Exception(f"Worker logic error: {e}")
+                        logger.error(f"Worker logic error: {e}\nHere is the data received from request: \n{data}")
+                        raise Exception(f"Worker logic error: \n{e}")
                     res.close()
                 else:
                     logger.warning("This is a commercial segment. Passing.")

@@ -1,10 +1,12 @@
 from dotenv import load_dotenv
 import clickhouse_connect
+from elasticsearch import Elasticsearch
 import os
 import json
 from typing import List
 import re
 import logging
+from datetime import datetime, timezone, timedelta
 
 def get_client():
     """
@@ -18,6 +20,25 @@ def get_client():
         username=conn['username'],
         password=conn['password'],
         database=conn['database'],
+    )
+    return client
+
+def get_els_client():
+    """
+    Gets connections for Elasticsearch server.
+    """
+    load_dotenv()
+    pw = json.loads(os.environ['ELS_PW'])
+    user = json.loads(os.environ['ELS_USER'])
+    host = json.loads(os.environ['ELS_HOST'])
+    cert = json.loads(os.environ['ELS_CERT'])
+    
+    # ASSERT HOSTNAME IN PRODUCTION!!!!
+    client = Elasticsearch(
+        host, 
+        basic_auth=(user, pw), 
+        ca_certs=cert, 
+        verify_certs=True, ssl_assert_hostname=False
     )
     return client
 
@@ -36,10 +57,22 @@ def key_sanitizer(task_id: str) -> str:
     return task_id
 
 def get_logger(logging_entity_name: str) -> logging.Logger:
+    
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(name)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    formatter.converter = custom_time
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+
     logging.basicConfig(
         filename=f'/workspace/servicelogs/{logging_entity_name}.log',
         filemode='a',
-        level=logging.ERROR,
-        format='%(asctime)s - %(levelname)s - %(name)s - %(message)s'
+        level=logging.ERROR
     )
-    return logging.getLogger(logging_entity_name)
+
+    logger = logging.getLogger(logging_entity_name)
+    logger.addHandler(handler)
+    return logger
+
+def custom_time():
+    tz = timezone(timedelta(hours=9))
+    return datetime.now(tz)

@@ -61,7 +61,7 @@ if __name__ == "__main__":
                             artist = str(data['track']['artist'])
                             cover = data['track']['imageurl']
                             playlist = data['track'].get('playlist')
-                            tag = playlist['title'] if playlist else None
+                            tag = playlist['title'] if playlist else ""
                             stream = data['tuneinurl']
                             genre = data['title'].split('-')[1].strip()
                             

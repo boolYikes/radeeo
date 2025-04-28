@@ -1,4 +1,4 @@
-.env
+*.env
 *.ipynb
 *.json
 *.jsonl
@@ -7,6 +7,8 @@
 *.log
 *.pid
 *.cfg
+*.cert
+*.crt
 .vscode/
 original_ref.yaml
 test.py

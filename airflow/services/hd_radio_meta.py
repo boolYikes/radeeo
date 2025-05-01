@@ -53,7 +53,7 @@ if __name__ == "__main__":
                     # -> under the assumption that no same song will be replayed within short period of time.
                     # -> AND the assumption that songs are normally under 10 min-long.
                     try:
-                        res = client.query(IngestQueries.play_status(data['track']['title'].replace("'", "\\'")))
+                        res = client.query(IngestQueries.play_status(str(data['track']['title']).replace("'", "\\'")))
                         if not res.result_rows and data['song']:
                             title = str(data['track']['title'])
                             aud = data['listeners']

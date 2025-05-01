@@ -76,7 +76,9 @@ x-airflow-common:
     # The following line can be used to set a custom config file, stored in the local config folder
     # If you want to use it, outcomment it and replace airflow.cfg with the name of your config file
     # AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
-    CLICKHOUSE_CONN: ${CLICKHOUSE_CONN}
+    # CLICKHOUSE_CONN: ${CLICKHOUSE_CONN}
+    # For cleanup: Connections added this way does not show up in UI or in airflow connections list. Only in airflow connections get ''
+    AIRFLOW_CONN_AIRFLOW_DB: ${AIRFLOW_DB}
   volumes:
     # - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
     # - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs

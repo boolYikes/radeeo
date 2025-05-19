@@ -18,7 +18,7 @@ with DAG(
     # The entrypoint of the image is ["/bin/bash"]
     generate_source = DockerOperator(
         task_id='generate_source',
-        image='python3.12_service:latest',
+        image='radeeo-python-service:latest',
         command=['-c', 'python source_sorter.py || exit 1'], # exit code needed lest it will silent-fail
         docker_url='unix://var/run/docker.sock',
         working_dir='/workspace',

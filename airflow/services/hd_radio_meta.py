@@ -25,7 +25,6 @@ if __name__ == "__main__":
     parser.add_argument("source", help="the name of the source")
     args = parser.parse_args()
 
-
     if args.source:
         source = args.source
         try:
@@ -42,8 +41,12 @@ if __name__ == "__main__":
                 headers = json.loads(result_set[0][2])
 
                 # Main meta query
-                res = requests.get(url, headers=headers, params=params)
-                data = res.json()['data'][0]
+                try:
+                    res = requests.get(url, headers=headers, params=params)
+                    data = res.json()['data'][0]
+                except Exception as e :
+                    logger.error(f"Error: {e}, Response: {res}")
+                    raise Exception(e)
 
                 # Commercial check: commercials use artist as the '<station> <channel>' format
                 artist = str(data['track']['artist'])

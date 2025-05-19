@@ -35,7 +35,7 @@ with DAG(
 
                 ingest_radio_info = DockerOperator(
                     task_id=key_sanitizer(f"ingest_{source['sname']}"),
-                    image='python3.12_service:latest',
+                    image='radeeo-python-service:latest',
                     command=["-c", f"""python hd_radio_meta.py '{source["sname"]}' || exit 1"""], # -u makes stdout unbuffered
                     docker_url='unix://var/run/docker.sock',
                     working_dir='/workspace',

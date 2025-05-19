@@ -18,7 +18,7 @@ default_args = {
 with DAG(
     dag_id="old_meta_cleanup",
     schedule="0 3 * * 0",
-    catchup=False,
+    catchup=True,
     tags=["system", "cleanup"],
     description="Does cleanup on old metadata and xcom, every sunday, targeting records older than a fortnight.",
     max_active_runs=1,
@@ -30,8 +30,9 @@ with DAG(
         task_id="clean_meta",
         bash_command="""
             airflow db clean \
-            --clean-before-timestamp {{ macros.ds_add(ds, -14) }}' \
-            --skip-archive
+            --clean-before-timestamp {{ macros.ds_add(ds, -14) }} \
+            --skip-archive \
+            --yes
         """
     )
 

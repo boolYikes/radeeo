@@ -47,11 +47,8 @@
 - [x] Sources sorter(for dynamic tasks) DAG
 - [x] 1st ingestiong DAG MVP
 - [x] Flower setup for worker monitoring
-- [ ] 1st transformer test
-- [ ] Publisher & Redis throttle
 
 ### ☠️ Cap’n’s Orders
-- [ ] Alert message
 - [ ] K8S Migration
 - [ ] CI/CD
 - [ ] Spark wave analysis, normalization, equilization, and so on

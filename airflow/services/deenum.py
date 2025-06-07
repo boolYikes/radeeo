@@ -1,73 +1,80 @@
 from enum import Enum
 
 class T1Queries(Enum):
-    DATABASE = "radeeo"
 
     # Normalizers for the second layer transformation
     # Combine these queries with except and temp tables to get new rows
     SILVER = {
         "fact_plays": f"""
             SELECT title AS song_title, pdate AS play_date, aud AS audience, source AS source_name, stream 
-            FROM {DATABASE}.music_raw""", 
+            FROM radeeo.music_raw""", 
         "dim_songs":f"""
-            SELECT DISTINCT(UPPER(title)) AS song_title, album AS album_title, artist AS artist_name, tags, genre
-            FROM {DATABASE}.music_raw
+            SELECT DISTINCT(UPPER(title)) AS song_title, album AS album_title, artist AS artist_name, tag, genre
+            FROM radeeo.music_raw
             """, 
         "dim_albums":f"""
             SELECT DISTINCT(UPPER(album)) AS album, artist, cover 
-            FROM {DATABASE}.music_raw
+            FROM radeeo.music_raw
             """, 
         "dim_artists":f"""
             SELECT DISTINCT(UPPER(artist)) AS artist_name
-            FROM {DATABASE}.music_raw
+            FROM radeeo.music_raw
             """, 
         "dim_sources":f"""
             SELECT sname AS source_name, added_on, url, params, headers, category
-            FROM {DATABASE}.source_meta
+            FROM radeeo.source_meta
             """,
         "music_raw":f"""
-            SELECT DISTINCT(UPPER(TITLE)) AS song_title, album AS album_title, artist AS artist_name, cover, tag, genre
-            FROM {DATABASE}.music_raw
+            SELECT DISTINCT(UPPER(title)) AS song_title, album AS album_title, artist AS artist_name, cover, tag, genre
+            FROM radeeo.music_raw
             """
     }
 
     # Date boundary selector for idempotency
-    DATE_BOUND = f"SELECT MAX(date(pdate)) FROM {DATABASE}.music_raw"
+    DATE_BOUND = f"SELECT MAX(date(pdate)) FROM radeeo.music_raw"
 
-    # Simple queries
-    def DROP(table_name: str) -> str:
-        return f"DROP TABLE IF EXISTS {T1Queries.DATABASE}.{table_name}"
-    
-    def CREATETEMP(table_name: str) -> str:
-        return f"CREATE TABLE {T1Queries.DATABASE}.temp_{table_name} AS {T1Queries.DATABASE}.{table_name}"
-    
-    def INSERTTEMP(table_name: str, origin_table: str) -> str:
-        """Input a subquery for [origin_table]."""
-        return f"INSERT INTO {T1Queries.DATABASE}.temp_{table_name} {origin_table}"
-    
-    # This is efficient... right?
-    def GETNEWROWS(table_name: str) -> str:
-        """Arguments should be in table expression!"""
-        return f"""
-        SELECT *, cityHash64(*) AS hashkey
-        FROM 
-            (
-            SELECT DISTINCT(UPPER(TITLE)) AS song_title, album AS album_title, artist AS artist_name, cover, tag, genre 
-            FROM {T1Queries.DATABASE}.temp_{table_name}
-            )
-        WHERE cityHash64(*)
-        NOT IN
-            (
-            SELECT cityHash64(*) 
-            FROM 
-                (
-                SELECT DISTINCT(UPPER(TITLE)) AS song_title, album AS album_title, artist AS artist_name, cover, tag, genre 
-                FROM {T1Queries.DATABASE}.{table_name}
-                )
-            )
-        """
-    def RENAMETEMP(table_name: str) -> str:
-        return f"RENAME TABLE temp_{table_name} TO {table_name}"
+    # Simple queries dispatcher
+    DROP = "drop"
+    CREATETEMP = "create_temp"
+    INSERTTEMP = "insert_temp"
+    GETNEWROWS = "get_new_rows"
+    RENAMETEMP = "rename_temp"
+    def do(self, table_name: str, origin_table: str = "") -> str:
+        target = 'music_tfd' if table_name == 'music_raw' else table_name
+        
+        if self == T1Queries.DROP:
+            return f"DROP TABLE IF EXISTS radeeo.{target}"
+        
+        elif self == T1Queries.CREATETEMP:
+            return f"CREATE TABLE radeeo.temp_{table_name} AS radeeo.{target}"
+        
+        # Input a subquery for [origin_table].
+        elif self == T1Queries.INSERTTEMP:
+            return f"INSERT INTO radeeo.temp_{table_name} {origin_table}"
+        
+        # Arguments should be in table expression!
+        elif self == T1Queries.GETNEWROWS:
+            return f"""
+                SELECT *, cityHash64(*) AS hashkey
+                FROM 
+                    (
+                    SELECT song_title, album_title, artist_name, cover, tag, genre 
+                    FROM radeeo.temp_{table_name}
+                    )
+                WHERE cityHash64(*)
+                NOT IN
+                    (
+                    SELECT cityHash64(*) 
+                    FROM 
+                        (
+                        SELECT song_title, album_title, artist_name, cover, tag, genre
+                        FROM radeeo.{target}
+                        )
+                    )
+            """
+        
+        elif self == T1Queries.RENAMETEMP:
+            return f"RENAME TABLE temp_{table_name} TO {target}"
     
 class IngestQueries(Enum):
     CREAT_MUSICRAW = """

@@ -3,12 +3,19 @@ from airflow.providers.docker.operators.docker import DockerOperator
 from airflow.utils.task_group import TaskGroup
 from services.operators.local_sensor import LocalFileSensor
 from services.common import json_load_wrapper, key_sanitizer
+from plugins.termux_alert import vibrate_alert
 from docker.types import Mount
 import pendulum
 import os
 import time
 
 DAG_NAME = 'hd_radio_ingestion'
+
+default_args = {
+    "owner": "dee",
+    "retries": "0",
+    "on_failure_callback": vibrate_alert
+}
 
 with DAG(
     dag_id=DAG_NAME,
@@ -18,15 +25,16 @@ with DAG(
     tags=["radio", "hd_radio"],
     description="Stream metadata ingestion layer for the radio station 'HD Radio'",
     max_active_runs=1,
-    max_active_tasks=8
+    max_active_tasks=8,
+    default_args=default_args
 ) as dag: 
     
     wait_for_sorting = LocalFileSensor(
         task_id="wait_for_sorting",
         filepath=os.path.join(os.environ["AIRFLOW_HOME"], "services/sources.json"),
         poke_interval=20,
-        timeout=300,
-        mode="reschedule"
+        timeout=60,
+        mode="poke"
     )
 
     with TaskGroup("hd_radio_group") as hd_radio_group:

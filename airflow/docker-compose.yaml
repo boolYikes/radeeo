@@ -65,6 +65,9 @@ x-airflow-common:
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
     AIRFLOW__USAGE_DATA_COLLECTION__ENABLED: 'false'
     PYTHONPATH: '/opt/airflow' # for package import ease
+    TERMUX_HOST: "${TERMUX_HOST}"
+    TERMUX_USER: "${TERMUX_USER}"
+    TERMUX_PORT: "${TERMUX_PORT}"
     # yamllint disable rule:line-length
     # Use simple http server on scheduler for health checks
     # See https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/logging-monitoring/check-health.html#scheduler-health-check-server
@@ -72,7 +75,7 @@ x-airflow-common:
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
     # WARNING: Use _PIP_ADDITIONAL_REQUIREMENTS option ONLY for a quick checks
     # for other purpose (development, test and especially production usage) build/extend Airflow image.
-    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-clickhouse-connect elasticsearch}
+    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-clickhouse-connect elasticsearch paramiko}
     # The following line can be used to set a custom config file, stored in the local config folder
     # If you want to use it, outcomment it and replace airflow.cfg with the name of your config file
     # AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
@@ -87,6 +90,7 @@ x-airflow-common:
     # - ${AIRFLOW_PROJ_DIR:-.}/services:/opt/airflow/services
     - ${AIRFLOW_PROJ_DIR:-.}/:/opt/airflow # for packages relief
     - /var/run/docker.sock:/var/run/docker.sock # for docker operator
+    - /home/dee/.ssh/id_ed25519_pwless:/opt/airflow/.ssh/id_ed25519_pwless
   user: "${AIRFLOW_UID:-50000}:0"
   # privileged: true
   depends_on:

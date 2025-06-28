@@ -10,5 +10,6 @@
 *.cert
 *.crt
 .vscode/
+**/.ssh/*
 original_ref.yaml
 test.py

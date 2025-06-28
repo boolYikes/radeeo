@@ -4,8 +4,10 @@ import paramiko
 TERMUX_HOST = os.getenv("TERMUX_HOST")
 TERMUX_PORT = int(os.getenv("TERMUX_PORT"))
 TERMUX_USER = os.getenv("TERMUX_USER")
-SSH_KEY      = "/opt/airflow/.ssh/id_ed25519_pwless"
+SSH_KEY     = "/opt/airflow/.ssh/id_ed25519_pwless"
+PWD         = os.getenv("PWD")
 
+# Although this only gives you two vrm-vrm. Probably varies by devices
 PATTERN = "250,150,500,150,1000"    # vibe-pause-vibe-pause-vibe
 
 def vibrate_alert(context):
@@ -21,9 +23,10 @@ def vibrate_alert(context):
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(TERMUX_HOST, 
+    ssh.connect(TERMUX_HOST,
                 port=TERMUX_PORT,
-                username=TERMUX_USER, 
-                key_filename=SSH_KEY)
+                username=TERMUX_USER,
+                key_filename=SSH_KEY,
+                password=PWD)
     ssh.exec_command(cmd)
     ssh.close()

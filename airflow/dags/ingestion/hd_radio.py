@@ -32,8 +32,7 @@ with DAG(
     wait_for_sorting = LocalFileSensor(
         task_id="wait_for_sorting",
         filepath=os.path.join(os.environ["AIRFLOW_HOME"], "services/sources.json"),
-        poke_interval=20,
-        timeout=60,
+        timeout=0,
         mode="poke"
     )
 

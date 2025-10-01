@@ -13,6 +13,6 @@ class LocalFileSensor(BaseSensorOperator):
         self.filepath = filepath
 
     def poke(self, context):
-        if os.path.exists(self.filepath):
-            return True
-        return AirflowException(f"File {self.filepath} not found")
+        if not os.path.exists(self.filepath):
+            raise AirflowException(f"File {self.filepath} not found")
+        return True

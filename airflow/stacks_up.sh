@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dwon
+/lab/dee/repos_side/radeeo/ch.sh
 
 echo "😁 Setting temporary socket permissions..."
 sudo chmod 666 /var/run/docker.sock

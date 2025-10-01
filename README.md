@@ -50,6 +50,7 @@
 
 ### ☠️ Cap’n’s Orders
 - [ ] K8S Migration
+- [ ] Manage SQL separately in .sql
 - [ ] CI/CD
 - [ ] Spark wave analysis, normalization, equilization, and so on
 

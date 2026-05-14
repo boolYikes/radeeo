@@ -1,4 +1,13 @@
-## ☠️ The Jolly Code — A Booty Huntin' Repo
+<!--
+---
+name: Radeeo
+date: 2025-10-01
+tags: [python, clickhouse, spark, airflow, sql]
+summary: Radio stream info meta extraction/enrichment workflow
+---
+-->
+
+# ☠️ The Jolly Code — A Booty Huntin' Repo
 
 ![Pirate Approved](https://img.shields.io/badge/status-seaworthy-brightgreen?style=for-the-bilge&logo=skull)
 
@@ -8,19 +17,19 @@
 
 ---
 
-### 🗺️ Map o' the Treasure
+## 🗺️ Map o' the Treasure
 [Architecture]
 
-### 🏴‍☠️ Ye Can See It Yonder
+## 🏴‍☠️ Ye Can See It Yonder
 ⚓ A demo be brewin’ in the depths. Come back when the tides be right!
 
-### ⚓ What Be Afloat?
+## ⚓ What Be Afloat?
 - ⚔️ Snappy to hoist 'n launch
 - 💨 Fast as a cutlass in the moonlight
 - 📜 Code so clean, even the Kraken can read it
 - 🔐 Locked tighter than Davy Jones’ locker
 
-### 🏗️ Settin’ Sail
+## 🏗️ Settin’ Sail
 - [x] Clickhouse: [LINK](https://hub.docker.com/_/clickhouse)
     - Create volumes
     - Run:
@@ -48,17 +57,18 @@
 - [x] 1st ingestiong DAG MVP
 - [x] Flower setup for worker monitoring
 
-### ☠️ Cap’n’s Orders
+## ☠️ Cap’n’s Orders
+- [ ] The meta schema went through a change. Must evolve accordingly
 - [ ] K8S Migration
 - [ ] CI/CD
 - [ ] Spark wave analysis, normalization, equilization, and so on
 
-### 💀 From the Crow's Nest to the Cabin
+## 💀 From the Crow's Nest to the Cabin
 - DockerOperator is a pain...
 - [DockerOperator](https://airflow.apache.org/docs/apache-airflow-providers-docker/stable/_api/airflow/providers/docker/operators/docker/index.html)
 - [DAG](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/dag/index.html#airflow.models.dag.DAG)
 
-### 📜 Code o' the Ship
+## 📜 Code o' the Ship
 This treasure be under the MIT License — share it, fork it, do what ye will... but give a nod to the cap’n.
 
 > 🏴 Avast! May yer bugs be few and yer deploys be swift!

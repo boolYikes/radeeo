@@ -12,3 +12,4 @@
 .vscode/
 original_ref.yaml
 test.py
+*.ssh

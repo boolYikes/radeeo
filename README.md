@@ -60,6 +60,7 @@ summary: Radio stream info meta extraction/enrichment workflow
 ## ☠️ Cap’n’s Orders
 - [ ] The meta schema went through a change. Must evolve accordingly
 - [ ] K8S Migration
+- [ ] Manage SQL separately in .sql
 - [ ] CI/CD
 - [ ] Spark wave analysis, normalization, equilization, and so on
 

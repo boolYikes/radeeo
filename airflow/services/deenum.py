@@ -5,33 +5,33 @@ class T1Queries(Enum):
     # Normalizers for the second layer transformation
     # Combine these queries with except and temp tables to get new rows
     SILVER = {
-        "fact_plays": f"""
+        "fact_plays": """
             SELECT title AS song_title, pdate AS play_date, aud AS audience, source AS source_name, stream 
             FROM radeeo.music_raw""", 
-        "dim_songs":f"""
+        "dim_songs":"""
             SELECT DISTINCT(UPPER(title)) AS song_title, album AS album_title, artist AS artist_name, tag, genre
             FROM radeeo.music_raw
             """, 
-        "dim_albums":f"""
+        "dim_albums":"""
             SELECT DISTINCT(UPPER(album)) AS album, artist, cover 
             FROM radeeo.music_raw
             """, 
-        "dim_artists":f"""
+        "dim_artists":"""
             SELECT DISTINCT(UPPER(artist)) AS artist_name
             FROM radeeo.music_raw
             """, 
-        "dim_sources":f"""
+        "dim_sources":"""
             SELECT sname AS source_name, added_on, url, params, headers, category
             FROM radeeo.source_meta
             """,
-        "music_raw":f"""
+        "music_raw":"""
             SELECT DISTINCT(UPPER(title)) AS song_title, album AS album_title, artist AS artist_name, cover, tag, genre
             FROM radeeo.music_raw
             """
     }
 
     # Date boundary selector for idempotency
-    DATE_BOUND = f"SELECT MAX(date(pdate)) FROM radeeo.music_raw"
+    DATE_BOUND = "SELECT MAX(date(pdate)) FROM radeeo.music_raw"
 
     # Simple queries dispatcher
     DROP = "drop"
@@ -39,7 +39,7 @@ class T1Queries(Enum):
     INSERTTEMP = "insert_temp"
     GETNEWROWS = "get_new_rows"
     RENAMETEMP = "rename_temp"
-    def do(self, table_name: str, origin_table: str = "") -> str:
+    def do(self, table_name: str, origin_table: str = "") -> str | None:
         target = 'music_tfd' if table_name == 'music_raw' else table_name
         
         if self == T1Queries.DROP:
@@ -104,7 +104,8 @@ class IngestQueries(Enum):
     FROM source_meta
     """
     
-    def get_source(source_name: str) -> str:
+    @classmethod
+    def get_source(cls, source_name: str) -> str:
         return f"""
         SELECT url, params, headers
         FROM source_meta
@@ -113,7 +114,8 @@ class IngestQueries(Enum):
         LIMIT 1
         """
     
-    def play_status(title: str) -> str:
+    @classmethod
+    def play_status(cls, title: str) -> str:
         return f"""
         SELECT
         title
